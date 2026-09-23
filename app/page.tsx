@@ -1,69 +1,85 @@
 import Image from "next/image";
+import Link from "next/link";
+import { BookingProcess, ContactPanel, ReviewCarousel, SiteFooter, SiteHeader } from "./components";
+
+const services = [
+  { title: "Residential Cleaning", image: "/images/residential.jpg", href: "/services#residential-cleaning" },
+  { title: "Commercial Cleaning", image: "/images/commercial.jpg", href: "/services#commercial-cleaning" },
+  { title: "Airbnb Cleaning", image: "/images/airbnb.jpg", href: "/services#airbnb-cleaning" },
+];
+
+const team = [
+  { name: "Owen Ing", role: "Manager", copy: "Committed to operational excellence.", icon: "/images/team-icon-gear.png" },
+  { name: "Alan Su", role: "Owner/Director", copy: "Leading with vision and detail since 2020.", icon: "/images/team-icon-star.png" },
+  { name: "Sneha", role: "Residential Cleaner", copy: "Trusted by dozens of households and hosts.", icon: "/images/team-icon-sparkles.png" },
+  { name: "Long", role: "Residential Cleaner", copy: "Known for thoroughness and a warm smile.", icon: "/images/team-icon-sparkles.png" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <SiteHeader active="home" />
+      <main>
+        <section className="home-hero">
+          <h1>Cleaning with Care, Precision, and Heart.</h1>
+        </section>
+
+        <section className="mission-section">
+          <div className="centered-copy">
+            <h2>Our Mission</h2>
+            <p>
+              At BeatingHeart Limited, our mission is to deliver exceptional cleaning that elevates comfort,
+              restores harmony, and upholds the highest standards of hygiene in every space we care for. Guided
+              by transparency, punctuality, and a trusted team of professionals — we clean with heart.
+            </p>
+          </div>
+        </section>
+
+        <section className="specialities-section section-pad">
+          <div className="section-heading centered-copy dark-copy">
+            <h2>Our Specialities</h2>
+            <p>We specialise in luxury residential, commercial, and Airbnb cleaning — delivering spotless results with precision, reliability, and a personal touch.</p>
+          </div>
+          <div className="speciality-grid">
+            {services.map((service) => (
+              <Link className="speciality-card" href={service.href} key={service.title}>
+                <div className="speciality-image">
+                  <Image src={service.image} alt={service.title} fill sizes="(max-width: 760px) 100vw, 33vw" />
+                </div>
+                <h3>{service.title}</h3>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="team-section section-pad">
+          <div className="section-heading centered-copy dark-copy team-heading">
+            <span className="eyebrow">The People Behind Every Impeccable Clean.</span>
+            <h2>Our Team</h2>
+            <p>Our team brings years of hands-on experience and a shared commitment to delivering quality in every detail.</p>
+          </div>
+          <div className="team-layout">
+            <div className="team-grid">
+              {team.map((member) => (
+                <article className="team-card" key={member.name}>
+                  <Image src={member.icon} alt="" width={80} height={80} />
+                  <h3>{member.name}</h3>
+                  <p className="team-role">{member.role}</p>
+                  <p>{member.copy}</p>
+                </article>
+              ))}
+            </div>
+            <div className="team-photo">
+              <Image src="/images/team-group.jpeg" alt="The BeatingHeart cleaning team" fill sizes="(max-width: 900px) 100vw, 42vw" />
+            </div>
+          </div>
+        </section>
+
+        <BookingProcess />
+        <ReviewCarousel />
+        <ContactPanel showMap />
       </main>
-    </div>
+      <SiteFooter />
+    </>
   );
 }

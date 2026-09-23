@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    // Preserve the official site's source assets byte-for-byte instead of
+    // generating lower-quality derivatives through Next's image optimizer.
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
