@@ -82,24 +82,30 @@ h3 {
   z-index: 30;
 }
 
-.brand,
-.footer-brand {
+.brand {
   align-items: center;
   display: block;
   height: 73px;
   width: 245px;
 }
 
-.brand img,
-.footer-brand img {
+.brand img {
   display: block;
   height: 73px;
   object-fit: contain;
   width: 245px;
 }
 
+.footer-brand,
+.footer-brand img {
+  display: block;
+  height: 85px;
+  object-fit: contain;
+  width: 285px;
+}
+
 .main-nav {
-  align-items: stretch;
+  align-items: center;
   display: flex;
   gap: 32px;
   height: 100%;
@@ -111,6 +117,7 @@ h3 {
   display: flex;
   font-size: 16px;
   font-weight: 500;
+  height: 48px;
   position: relative;
 }
 
@@ -667,8 +674,14 @@ h3 {
 }
 
 .service-copy ul {
+  list-style: disc outside;
   margin: 0;
   padding-left: 25px;
+}
+
+.service-copy li {
+  display: list-item;
+  padding-left: 2px;
 }
 
 .service-image {

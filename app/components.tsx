@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { usePathname } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 
 type ActivePage = "home" | "services" | "contact";
 
@@ -14,6 +15,11 @@ const navigation = [
 
 export function SiteHeader({ active }: { active: ActivePage }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
 
   return (
     <header className="site-header">
@@ -30,7 +36,18 @@ export function SiteHeader({ active }: { active: ActivePage }) {
         </Link>
         <nav className={`main-nav ${open ? "is-open" : ""}`} aria-label="Primary navigation">
           {navigation.map((item) => (
-            <Link className={active === item.key ? "active" : ""} href={item.href} key={item.key} onClick={() => setOpen(false)}>
+            <Link
+              className={active === item.key ? "active" : ""}
+              href={item.href}
+              key={item.key}
+              scroll
+              onClick={() => {
+                setOpen(false);
+                if (item.key === "services") {
+                  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+                }
+              }}
+            >
               {item.label}
             </Link>
           ))}
@@ -48,7 +65,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <nav aria-label="Footer navigation">
         <Link href="/contact">Contact Us</Link>
-        <Link href="/services">Services</Link>
+        <Link href="/services" scroll onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}>Services</Link>
         <Link href="/">Home</Link>
       </nav>
       <Link className="footer-brand" href="/" aria-label="BeatingHeart Limited home">
