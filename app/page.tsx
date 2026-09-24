@@ -3,9 +3,9 @@ import Link from "next/link";
 import { BookingProcess, ContactPanel, ReviewCarousel, SiteFooter, SiteHeader } from "./components";
 
 const services = [
-  { title: "Residential Cleaning", image: "/images/residential.jpg", href: "/services#residential-cleaning" },
-  { title: "Commercial Cleaning", image: "/images/commercial.jpg", href: "/services#commercial-cleaning" },
-  { title: "Airbnb Cleaning", image: "/images/airbnb.jpg", href: "/services#airbnb-cleaning" },
+  { title: "Residential Cleaning", image: "/images/residential.jpg", href: "/services/residential-cleaning" },
+  { title: "Commercial Cleaning", image: "/images/commercial.jpg", href: "/services/commercial-cleaning" },
+  { title: "Airbnb Cleaning", image: "/images/airbnb.jpg", href: "/services/airbnb-cleaning" },
 ];
 
 const team = [

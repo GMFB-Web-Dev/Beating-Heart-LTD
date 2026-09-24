@@ -26,10 +26,10 @@ export function SiteHeader({ active }: { active: ActivePage }) {
       <div className="nav-shell">
         <Link className="brand" href="/" aria-label="BeatingHeart Limited home">
           <Image
-            src="/logo.png"
+            src="/logo-hd.png"
             alt="BeatingHeart Limited Cleaning Services"
-            width={245}
-            height={73}
+            width={420}
+            height={120}
             priority
             unoptimized
           />
@@ -70,10 +70,10 @@ export function SiteFooter() {
       </nav>
       <Link className="footer-brand" href="/" aria-label="BeatingHeart Limited home">
         <Image
-          src="/logo.png"
+          src="/logo-hd.png"
           alt="BeatingHeart Limited Cleaning Services"
-          width={245}
-          height={73}
+          width={420}
+          height={120}
           unoptimized
         />
       </Link>
