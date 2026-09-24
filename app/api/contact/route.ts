@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const to = process.env.CONTACT_FORM_TO_EMAIL?.trim();
-  const from = process.env.RESEND_FROM_EMAIL?.trim() || "BeatingHeart Website <enquiries@weblaunch.co.nz>";
+  const from = "BeatingHeart Website <enquiries@weblaunch.co.nz>";
 
   if (!apiKey || !to) {
     console.error("Contact form email configuration is incomplete.");

@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Contact form email
+
+The contact form sends through Resend from the verified sender `BeatingHeart Website <enquiries@weblaunch.co.nz>`. Configure these server-only environment variables locally and in Vercel:
+
+```env
+RESEND_API_KEY=re_...
+CONTACT_FORM_TO_EMAIL=recipient@example.com
+```
+
+`CONTACT_FORM_TO_EMAIL` controls the enquiry destination. The visitor's submitted email is used as the reply-to address.
+
 ## Getting Started
 
 First, run the development server:
