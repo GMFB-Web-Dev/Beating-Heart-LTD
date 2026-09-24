@@ -21,12 +21,29 @@ export default function Home() {
       <SiteHeader active="home" />
       <main>
         <section className="home-hero">
-          <h1>Cleaning with Care, Precision, and Heart.</h1>
+          <div className="hero-content">
+            <span className="hero-eyebrow">Auckland cleaning specialists</span>
+            <h1>Cleaning with Care, Precision, and Heart.</h1>
+            <p>Thoughtful residential, commercial, and Airbnb cleaning delivered by a team that treats every space with respect.</p>
+            <div className="hero-actions">
+              <Link className="hero-button primary" href="/contact">Request a quote <span aria-hidden="true">→</span></Link>
+              <Link className="hero-button secondary" href="/services">Explore services <span aria-hidden="true">→</span></Link>
+            </div>
+          </div>
+          <div className="hero-trust" aria-label="BeatingHeart at a glance">
+            <div><strong>15+</strong><span>Years Combined Experience</span></div>
+            <div><strong>100+</strong><span>Jobs all around Auckland</span></div>
+            <div><strong>Auckland</strong><span>Region</span></div>
+            <div><strong>100%</strong><span>Customer Satisfaction</span></div>
+          </div>
         </section>
 
         <section className="mission-section">
-          <div className="centered-copy">
-            <h2>Our Mission</h2>
+          <div className="mission-grid">
+            <div>
+              <span className="section-kicker">Our promise</span>
+              <h2>Our Mission</h2>
+            </div>
             <p>
               At BeatingHeart Limited, our mission is to deliver exceptional cleaning that elevates comfort,
               restores harmony, and upholds the highest standards of hygiene in every space we care for. Guided
@@ -41,12 +58,13 @@ export default function Home() {
             <p>We specialise in luxury residential, commercial, and Airbnb cleaning — delivering spotless results with precision, reliability, and a personal touch.</p>
           </div>
           <div className="speciality-grid">
-            {services.map((service) => (
+            {services.map((service, index) => (
               <Link className="speciality-card" href={service.href} key={service.title}>
                 <div className="speciality-image">
                   <Image src={service.image} alt={service.title} fill sizes="(max-width: 760px) 100vw, 33vw" />
+                  <span className="card-index">0{index + 1}</span>
                 </div>
-                <h3>{service.title}</h3>
+                <div className="speciality-card-title"><h3>{service.title}</h3><span aria-hidden="true">↗</span></div>
               </Link>
             ))}
           </div>
