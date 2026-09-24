@@ -8,9 +8,13 @@ import { FormEvent, useEffect, useState } from "react";
 type ActivePage = "home" | "services" | "contact";
 
 const navigation = [
-  { label: "Home", href: "/", key: "home" },
-  { label: "Services", href: "/services", key: "services" },
   { label: "Contact Us", href: "/contact", key: "contact" },
+] as const;
+
+const serviceNavigation = [
+  { label: "Residential Cleaning", href: "/services/residential-cleaning" },
+  { label: "Commercial Cleaning", href: "/services/commercial-cleaning" },
+  { label: "Airbnb Cleaning", href: "/services/airbnb-cleaning" },
 ] as const;
 
 export function SiteHeader({ active }: { active: ActivePage }) {
@@ -35,18 +39,45 @@ export function SiteHeader({ active }: { active: ActivePage }) {
           />
         </Link>
         <nav className={`main-nav ${open ? "is-open" : ""}`} aria-label="Primary navigation">
+          <Link
+            className={active === "home" ? "active" : ""}
+            href="/"
+            onClick={() => setOpen(false)}
+          >
+            Home
+          </Link>
+          <div className="nav-item nav-services">
+            <Link
+              className={active === "services" ? "active" : ""}
+              href="/services"
+              aria-haspopup="true"
+              scroll
+              onClick={() => {
+                setOpen(false);
+                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+              }}
+            >
+              Services <span className="nav-chevron" aria-hidden="true" />
+            </Link>
+            <div className="nav-dropdown" aria-label="Cleaning services">
+              {serviceNavigation.map((service) => (
+                <Link
+                  className={pathname === service.href ? "active" : ""}
+                  href={service.href}
+                  key={service.href}
+                  onClick={() => setOpen(false)}
+                >
+                  {service.label}
+                </Link>
+              ))}
+            </div>
+          </div>
           {navigation.map((item) => (
             <Link
               className={active === item.key ? "active" : ""}
               href={item.href}
               key={item.key}
-              scroll
-              onClick={() => {
-                setOpen(false);
-                if (item.key === "services") {
-                  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-                }
-              }}
+              onClick={() => setOpen(false)}
             >
               {item.label}
             </Link>
@@ -143,18 +174,51 @@ export function EnquiryForm({
   firstName?: boolean;
   serviceLabel?: string;
 }) {
-  const [submitted, setSubmitted] = useState(false);
-  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSubmitted(true); };
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const fields = new FormData(form);
+
+    setStatus("submitting");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fields.get("name"),
+          email: fields.get("email"),
+          service: fields.get("service"),
+          message: fields.get("message"),
+          terms: fields.get("terms") === "on",
+          company: fields.get("company"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to send enquiry");
+      }
+
+      form.reset();
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  };
 
   return (
     <form className={`enquiry-form ${light ? "light" : ""}`} onSubmit={submit}>
-      <label>{firstName ? "First name" : "Name"}<input required name="name" placeholder={firstName ? "First name" : "Name"} /></label>
-      <label>Email<input required name="email" type="email" placeholder="Enter your email" /></label>
-      <label>{serviceLabel}<select name="service" defaultValue="Residential cleaning"><option>Residential cleaning</option><option>Commercial Cleaning</option><option>AirBnb Cleaning</option></select></label>
-      <label>Message<textarea required name="message" placeholder="Type your message here..." /></label>
-      <label className="terms"><input required type="checkbox" /><span>I agree to the terms and conditions</span></label>
-      <button type="submit">Submit</button>
-      {submitted && <p className="form-success">Thanks — we’ll be in touch soon.</p>}
+      <label>{firstName ? "First name" : "Name"}<input required name="name" maxLength={100} autoComplete="name" placeholder={firstName ? "First name" : "Name"} /></label>
+      <label>Email<input required name="email" type="email" maxLength={254} autoComplete="email" placeholder="Enter your email" /></label>
+      <label>{serviceLabel}<select name="service" defaultValue="Residential Cleaning"><option>Residential Cleaning</option><option>Commercial Cleaning</option><option>Airbnb Cleaning</option><option>General Enquiry</option></select></label>
+      <label>Message<textarea required name="message" minLength={10} maxLength={5000} placeholder="Type your message here..." /></label>
+      <label className="form-honeypot" aria-hidden="true">Company<input name="company" tabIndex={-1} autoComplete="off" /></label>
+      <label className="terms"><input required name="terms" type="checkbox" /><span>I agree to the terms and conditions</span></label>
+      <button type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Sending…" : "Submit"}</button>
+      {status === "success" && <p className="form-status form-success" role="status">Thanks — your enquiry has been sent.</p>}
+      {status === "error" && <p className="form-status form-error" role="alert">Sorry, we couldn’t send that. Please try again or email us directly.</p>}
     </form>
   );
 }
