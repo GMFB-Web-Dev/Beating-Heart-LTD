@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { EnquiryNotificationEmail } from "../../../emails/enquiry-notification";
 
 export const runtime = "nodejs";
 
@@ -20,20 +21,6 @@ type ContactPayload = {
 
 function cleanText(value: unknown, maximumLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maximumLength) : "";
-}
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>'"]/g, (character) => {
-    const entities: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      "'": "&#39;",
-      '"': "&quot;",
-    };
-
-    return entities[character];
-  });
 }
 
 export async function POST(request: Request) {
@@ -86,10 +73,6 @@ export async function POST(request: Request) {
     return Response.json({ message: "Contact form is temporarily unavailable." }, { status: 503 });
   }
 
-  const safeName = escapeHtml(name);
-  const safeEmail = escapeHtml(email);
-  const safeService = escapeHtml(service);
-  const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send(
@@ -99,15 +82,7 @@ export async function POST(request: Request) {
         replyTo: email,
         subject: `New BeatingHeart enquiry — ${service}`,
         text: `New website enquiry\n\nName: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`,
-        html: `
-          <div style="font-family:Arial,sans-serif;color:#101828;line-height:1.6">
-            <h1 style="font-size:24px;margin:0 0 20px">New website enquiry</h1>
-            <p><strong>Name:</strong> ${safeName}</p>
-            <p><strong>Email:</strong> ${safeEmail}</p>
-            <p><strong>Service:</strong> ${safeService}</p>
-            <p><strong>Message:</strong><br />${safeMessage}</p>
-          </div>
-        `,
+        react: EnquiryNotificationEmail({ name, email, service, message }),
       },
       { idempotencyKey: `beatingheart-contact/${crypto.randomUUID()}` },
     );

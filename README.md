@@ -11,6 +11,8 @@ CONTACT_FORM_TO_EMAIL=recipient@example.com
 
 `CONTACT_FORM_TO_EMAIL` controls the enquiry destination. The visitor's submitted email is used as the reply-to address.
 
+Enquiry notifications use the branded React Email template in `emails/enquiry-notification.tsx`, styled to match the website's navy-and-white visual system.
+
 ## Getting Started
 
 First, run the development server:
