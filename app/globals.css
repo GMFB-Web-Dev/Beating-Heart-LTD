@@ -84,25 +84,35 @@ h3 {
 
 .brand {
   align-items: center;
-  display: block;
+  display: flex;
   height: 63px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
   width: 220px;
 }
 
 .brand img {
   display: block;
-  filter: brightness(0);
-  height: 63px;
-  object-fit: contain;
+  height: 220px;
+  max-width: none;
   width: 220px;
 }
 
-.footer-brand,
+.footer-brand {
+  align-items: center;
+  display: flex;
+  height: 85px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: 285px;
+}
+
 .footer-brand img {
   display: block;
-  filter: brightness(0);
-  height: 85px;
-  object-fit: contain;
+  height: 285px;
+  max-width: none;
   width: 285px;
 }
 
@@ -923,7 +933,7 @@ h3 {
   }
 
   .brand img {
-    height: 49px;
+    height: 170px;
     width: 170px;
   }
 

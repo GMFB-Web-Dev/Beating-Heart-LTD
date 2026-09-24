@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Luxury residential, commercial and Airbnb cleaning services across Auckland, delivered with care, precision and heart.",
   icons: {
-    icon: "/logo.png",
+    icon: "/beatingheart-logo.jpg",
   },
 };
 
