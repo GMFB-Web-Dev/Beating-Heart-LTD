@@ -77,9 +77,9 @@ export async function POST(request: Request) {
     return Response.json({ message: "Please check the form details and try again." }, { status: 400 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_FORM_TO_EMAIL;
-  const from = process.env.RESEND_FROM_EMAIL ?? "BeatingHeart Website <onboarding@resend.dev>";
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const to = process.env.CONTACT_FORM_TO_EMAIL?.trim();
+  const from = process.env.RESEND_FROM_EMAIL?.trim() || "BeatingHeart Website <enquiries@weblaunch.co.nz>";
 
   if (!apiKey || !to) {
     console.error("Contact form email configuration is incomplete.");
@@ -90,30 +90,34 @@ export async function POST(request: Request) {
   const safeEmail = escapeHtml(email);
   const safeService = escapeHtml(service);
   const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
-  const resend = new Resend(apiKey);
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send(
+      {
+        from,
+        to: [to],
+        replyTo: email,
+        subject: `New BeatingHeart enquiry — ${service}`,
+        text: `New website enquiry\n\nName: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;color:#101828;line-height:1.6">
+            <h1 style="font-size:24px;margin:0 0 20px">New website enquiry</h1>
+            <p><strong>Name:</strong> ${safeName}</p>
+            <p><strong>Email:</strong> ${safeEmail}</p>
+            <p><strong>Service:</strong> ${safeService}</p>
+            <p><strong>Message:</strong><br />${safeMessage}</p>
+          </div>
+        `,
+      },
+      { idempotencyKey: `beatingheart-contact/${crypto.randomUUID()}` },
+    );
 
-  const { error } = await resend.emails.send(
-    {
-      from,
-      to: [to],
-      replyTo: email,
-      subject: `New BeatingHeart enquiry — ${service}`,
-      text: `New website enquiry\n\nName: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`,
-      html: `
-        <div style="font-family:Arial,sans-serif;color:#101828;line-height:1.6">
-          <h1 style="font-size:24px;margin:0 0 20px">New website enquiry</h1>
-          <p><strong>Name:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> ${safeEmail}</p>
-          <p><strong>Service:</strong> ${safeService}</p>
-          <p><strong>Message:</strong><br />${safeMessage}</p>
-        </div>
-      `,
-    },
-    { idempotencyKey: `beatingheart-contact/${crypto.randomUUID()}` },
-  );
-
-  if (error) {
-    console.error("Resend contact form error:", error.name, error.message);
+    if (error) {
+      console.error("Resend contact form error:", error.name, error.message);
+      return Response.json({ message: "Unable to send enquiry." }, { status: 502 });
+    }
+  } catch (error) {
+    console.error("Unexpected contact form email error:", error instanceof Error ? error.message : "Unknown error");
     return Response.json({ message: "Unable to send enquiry." }, { status: 502 });
   }
 
